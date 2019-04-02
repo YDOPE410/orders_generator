@@ -1,0 +1,4 @@
+LIST_DIRECTION = ["buy",
+                  "sale"]
+LEN_MAX_LIST_DIRECTION = len(LIST_DIRECTION)-1
+LEN_MIN_LIST_DIRECTION = 0

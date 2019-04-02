@@ -1,0 +1,2 @@
+MIN_VOL = 1
+MAX_VOL = 1000

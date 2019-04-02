@@ -1,0 +1,25 @@
+{
+  "COUNT_ORDERS": 2000,
+  "RED_ZONE": 0.15,
+  "GREEN_ZONE": 0.6,
+  "BLUE_ZONE": 0.25,
+  "BATCH": 100,
+  "MYSQL": {
+    "DATABASE": "db_simcord_orders_history",
+    "HOST": "localhost",
+    "PORT": 3306,
+    "PASSWORD": "",
+    "USER": "hoffman"
+  },
+  "RABBITMQ": {
+            "HOST": "localhost",
+            "PORT": 5672,
+            "VIRTUAL_HOST": "/",
+            "PASSWORD": "",
+            "USER": "hoffman",
+            "EXCHANGE": "orders_by_statuses",
+            "ROUTING_KEY": "topic"
+        }),
+  "LOG_TXT_FILE_PATH": "../logs/current_date.log",
+  "LOG_LVL": 1
+}
