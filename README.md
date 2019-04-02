@@ -102,7 +102,7 @@ bash
 
 (11668019, 'EUR/CAD', 'sale', 'fill', '1550417436817', 1.5, 1.485, 589, 589, 'Technology_presentation', 'reset')
 
-(34064294, 'GBP/AUD', 'sale', 'new', '1550573507947', 1.8199, 0.0, 990, 0, 'License_change', 'pace')
+(34064294, 'GBP/AUD', 'sale', 'new', '1550573507942', 1.8199, 0.0, 990, 0, 'License_change', 'pace')
 
 (34064294, 'GBP/AUD', 'sale', 'to_provide', '1550573510916', 1.8199, 0.0, 990, 0, 'License_change', 'pace')
 
