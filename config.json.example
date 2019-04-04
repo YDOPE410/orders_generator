@@ -4,6 +4,11 @@
   "GREEN_ZONE": 0.6,
   "BLUE_ZONE": 0.25,
   "BATCH": 100,
+  "ZONE": {
+    "BLUE_ZONE": "blue_zone",
+    "RED_ZONE": "red_zone",
+    "GREEN_ZONE": "green_zone"
+  },
   "MYSQL": {
     "DATABASE": "db_simcord_orders_history",
     "HOST": "localhost",
@@ -15,12 +20,16 @@
             "HOST": "localhost",
             "PORT": 5672,
             "VIRTUAL_HOST": "/",
-            "PASSWORD": "",
-            "USER": "hoffman",
-            "EXCHANGE": "orders_by_statuses",
-            "ROUTING_KEY": "topic"
-        }),
+            "PASSWORD": "guest",
+            "USER": "guest",
+            "EXCHANGE_NAME": "",
+            "EXCHANGE_TYPE": "topic",
+            "ROUTING_KEY_GREEN_ZONE": "green_zone",
+            "ROUTING_KEY_BLUE_ZONE": "blue_zone",
+            "ROUTING_KEY_RED_ZONE": "red_zone"
+  },
+  "TXT_FILE_WITH_ORDERS": "../resource/orders.txt",
   "LOG_TXT_FILE_PATH": "../logs/current_date.log",
   "LOG_LVL": 1,
-  config.CONSOLE_LOG = True
+  "CONSOLE_LOG": true
 }
