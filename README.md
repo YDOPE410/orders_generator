@@ -4,6 +4,7 @@ Generator of orders history
 Overview
 --
 Order:
+```
     id - id of order
     direction - order direction
     cur_pair - name of currency pair
@@ -15,6 +16,7 @@ Order:
     init_volume - filled volume
     description - order description
     tag - order tags
+```
 
 All orders records divided distributed between 3 zones:
 * Red: Order started in previous periods of trading and finish in current period
@@ -24,16 +26,20 @@ All orders records divided distributed between 3 zones:
 Trading execute on period Friday-Tuesday except weekends
 
 #Install:
+```bash
 $ git clone https://github.com/YDOPE410/orders_generator.git
-
+```
 Check if python exists:
+```bash
 $ python --version
+```
 If it not exists install it. Download it from official site: https://www.python.org/
 Or update it if yours python version less than 3.7. 
 
 #Install additional modules
+```bash
 $ pip install -r path_to/requirements.txt 
-
+```
 ---
 #Usage
 
@@ -42,7 +48,7 @@ Configurate generation settings before executing
 Required settings:
 
 // Change to your configurations
-
+```json
 {
   "COUNT_ORDERS": 2000,
   "RED_ZONE": 0.15,
@@ -78,12 +84,12 @@ Required settings:
   "LOG_LVL": 1,
   "CONSOLE_LOG": true
 }
-
+```
 
 If you want you can change other parameters in your config.json file
 
 #Create database and table
-
+```sql
 CREATE DATABASE IF NOT EXISTS db_simcord_orders_history;
 
 USE db_simcord_orders_history;
@@ -105,11 +111,11 @@ CREATE TABLE history (
   tag varchar(255) NOT NULL,
   PRIMARY KEY (id)
 );
-
+```
 # Starting history generation
-
+```bash
 $ python launcher.py
-
+```
 
 Result file content:
 (48331124, 'GBP/AUD', 'sale', 'new', '1550565487835', 1.8199, 0.0, 969, 0, 'License_change', 'pace')
