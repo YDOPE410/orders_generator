@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package mapping;
+
+message Order{
+    int64 id = 1;
+    string cur_pair = 2;
+    string direction = 3;
+    string status = 4;
+    int64 date = 5;
+    float init_px = 6;
+    int64 init_vol = 7;
+    float fill_px = 8;
+    int64 fill_vol = 9;
+    string description = 10;
+    string tag = 11;
+}

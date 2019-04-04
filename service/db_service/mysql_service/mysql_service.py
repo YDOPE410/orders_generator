@@ -18,22 +18,22 @@ class Mysql_service(Db_service):
                                                 passwd=self.password,
                                                 db=self.data_base)
                 self._is_connected = True
-                print(f"Connect to {self.data_base} is opened")
+                self._logger.debug(f"Connect to {self.data_base} is opened")
             except Exception as e:
-                print(f"{e}. Unable to connect to {self.data_base}")
+                self._logger.error(f"{e}. Unable to connect to {self.data_base}")
         else:
-            print(f"Connect to {self.data_base} is opened")
+            self._logger.debug(f"Connect to {self.data_base} is opened")
 
     def close_connection(self):
         if self._is_connected:
             try:
                 self._connect.close()
                 self._is_connected = False
-                print(f"Connect to {self.data_base} closed")
+                self._logger.debug(f"Connect to {self.data_base} closed")
             except Exception as e:
-                print(f"{e}. Unable to close connection to {self.data_base}")
+                self._logger.error(f"{e}. Unable to close connection to {self.data_base}")
         else:
-            print(f"Connect to {self.data_base} closed")
+            self._logger.debug(f"Connect to {self.data_base} closed")
 
 
     def execute(self, query):
@@ -44,12 +44,13 @@ class Mysql_service(Db_service):
                 self.uncommited += 1
                 return True
             except Exception as e:
-                print(f"{e}. {query} not executed")
+                self._logger.error(f"{e}. {query} not executed")
                 self._connect.rollback()
+                self._logger.debug(f"rollback database")
                 self.uncommited = 0
                 return False
         else:
-            print("Mysql connect is close. Can`t execute")
+            self._logger.debug("Mysql connect is close. Can`t execute")
             return False
 
     def commit(self):
@@ -57,5 +58,5 @@ class Mysql_service(Db_service):
             self._connect.commit()
             self.uncommited = 0
         except Exception as e:
-            print(f"{e}. Unable to commit at {self.data_base}")
+            self._logger.error(f"{e}. Unable to commit at {self.data_base}")
 

@@ -79,11 +79,11 @@ class Generator_order_in_zone(abc.ABC):
         last_status = self.result.status.split("->")[
             len(self.result.status.split("->")) - 1]
         if last_status == "fill":
-            self.result.fill_vol = self.result.init_vol
+            self.result.fill_vol = int(self.result.init_vol)
             return
         if last_status == "partial_fill":
-            self.result.fill_vol = self.result.init_vol + self.result.init_vol / 100 *\
-                                   random_between(-3, -1, self.result.id)
+            self.result.fill_vol = int(self.result.init_vol + self.result.init_vol / 100 *\
+                                   random_between(-3, -1, self.result.id))
             return
         self.result.fill_vol = 0
 

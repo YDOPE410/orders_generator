@@ -7,8 +7,7 @@ class Order_generator(Generator):
         self._zone_generator = zone_generator
 
     def change_zone(self, zone_generator):
-        print(f"change to {zone_generator}")
-        self._order_builder = zone_generator
+        self._zone_generator = zone_generator
 
     def generate_batch(self, amount):
         result = list()

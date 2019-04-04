@@ -21,5 +21,6 @@
             "ROUTING_KEY": "topic"
         }),
   "LOG_TXT_FILE_PATH": "../logs/current_date.log",
-  "LOG_LVL": 1
+  "LOG_LVL": 1,
+  config.CONSOLE_LOG = True
 }

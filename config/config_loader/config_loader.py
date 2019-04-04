@@ -6,8 +6,3 @@ class Config_loader(abc.ABC):
     @abc.abstractmethod
     def load(file_path):
         pass
-
-    @staticmethod
-    @abc.abstractmethod
-    def write_default():
-        pass

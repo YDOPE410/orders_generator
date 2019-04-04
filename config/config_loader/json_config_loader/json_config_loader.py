@@ -13,30 +13,4 @@ class Json_config_loader(Config_loader):
         except Exception as e:
             print(f"{e}. Unable to load {json_path}")
 
-    @staticmethod
-    def write_default():
-        config = Configuration()
-        config.COUNT_ORDERS = 2000
-        config.RED_ZONE = 0.15
-        config.GREEN_ZONE = 0.6
-        config.BLUE_ZONE = 0.25
-        config.BATCH = 100
-        config.MYSQL = Mapper({
-            "DATABASE": "db_simcord_orders_history",
-            "HOST": "localhost",
-            "PORT": 3306,
-            "PASSWORD": "",
-            "USER": "hoffman"
-        })
-        config.RABBITMQ = Mapper({
-            "HOST": "localhost",
-            "PORT": 5672,
-            "VIRTUAL_HOST": "/",
-            "PASSWORD": "",
-            "USER": "hoffman",
-            "EXCHANGE": "orders_by_statuses"
-        })
-        config.LOG_TXT_FILE_PATH = "../logs/current_date.log"
-        config.LOG_LVL = 1
-        return config
 

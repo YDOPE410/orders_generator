@@ -2,7 +2,6 @@ from orders_generator.generator.order.zone_generator import Generator_order_in_z
 from orders_generator.constant import constants_red_zone
 from orders_generator.utils.random_between import random_between
 
-
 class Generator_order_in_red_zone(Generator_order_in_zone):
 
     def set_status(self):

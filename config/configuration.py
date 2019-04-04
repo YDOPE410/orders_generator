@@ -8,3 +8,4 @@ class Configuration:
     RABBITMQ = {}
     LOG_TXT_FILE_PATH = ""
     LOG_LVL = 0
+    CONSOLE_LOG = True

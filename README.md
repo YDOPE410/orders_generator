@@ -7,14 +7,14 @@ Order:
     id - id of order
     direction - order direction
     cur_pair - name of currency pair
+    status - status of order
+    date - timestamp of status changing in milliseconds
     init_px - initial currency pair value
     init_volume - initial volume
     fill_px - filled currency pair value
     init_volume - filled volume
-    status - status of order
-    date - time of status changing in milliseconds
+    description - order description
     tag - order tags
-    desription - order descriptionn
 
 All orders records divided distributed between 3 zones:
 * Red: Order started in previous periods of trading and finish in current period
@@ -23,34 +23,23 @@ All orders records divided distributed between 3 zones:
 
 Trading execute on period Friday-Tuesday except weekends
 
-
-
-
-Install:
-
-bash
+#Install:
 $ git clone https://github.com/YDOPE410/orders_generator.git
 
-Chech if python exists:
-bash
+Check if python exists:
 $ python --version
 If it not exists install it. Download it from official site: https://www.python.org/
 Or update it if yours python version less than 3.7. 
 
-
-
-Install additional modules
-bash
+#Install additional modules
 $ pip install -r path_to/requirements.txt 
 
 ---
 #Usage
 
 Configurate generation settings before executing
-:
 
 Required settings:
-
 
 // Change to your configurations
 
@@ -60,6 +49,11 @@ Required settings:
   "GREEN_ZONE": 0.6,
   "BLUE_ZONE": 0.25,
   "BATCH": 100,
+  "ZONE": {
+    "BLUE_ZONE": "blue_zone",
+    "RED_ZONE": "red_zone",
+    "GREEN_ZONE": "green_zone"
+  },
   "MYSQL": {
     "DATABASE": "db_simcord_orders_history",
     "HOST": "localhost",
@@ -71,25 +65,53 @@ Required settings:
             "HOST": "localhost",
             "PORT": 5672,
             "VIRTUAL_HOST": "/",
-            "PASSWORD": "",
-            "USER": "hoffman",
-            "EXCHANGE": "orders_by_statuses",
-            "ROUTING_KEY": "topic"
-        }),
+            "PASSWORD": "guest",
+            "USER": "guest",
+            "EXCHANGE_NAME": "",
+            "EXCHANGE_TYPE": "topic",
+            "ROUTING_KEY_GREEN_ZONE": "green_zone",
+            "ROUTING_KEY_BLUE_ZONE": "blue_zone",
+            "ROUTING_KEY_RED_ZONE": "red_zone"
+  },
+  "TXT_FILE_WITH_ORDERS": "../resource/orders.txt",
   "LOG_TXT_FILE_PATH": "../logs/current_date.log",
-  "LOG_LVL": 1
+  "LOG_LVL": 1,
+  "CONSOLE_LOG": true
 }
 
 
 If you want you can change other parameters in your config.json file
 
-## Starting history generation
+#Create database and table
+
+CREATE DATABASE IF NOT EXISTS db_simcord_orders_history;
+
+USE db_simcord_orders_history;
+
+DROP TABLE IF EXISTS history;
+
+CREATE TABLE history (
+  id int NOT NULL AUTO_INCREMENT,
+  order_id bigint NOT NULL,
+  cur_pair varchar(255) NOT NULL,
+  direction varchar(255) NOT NULL,
+  status varchar(255) NOT NULL,
+  date bigint NOT NULL,
+  init_px double NOT NULL,
+  fill_px int NOT NULL,
+  init_vol float NOT NULL,
+  fill_vol int NOT NULL,
+  description varchar(255) NOT NULL,
+  tag varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+# Starting history generation
 
 $ python launcher.py
 
 
 Result file content:
-bash
 (48331124, 'GBP/AUD', 'sale', 'new', '1550565487835', 1.8199, 0.0, 969, 0, 'License_change', 'pace')
 
 (48331124, 'GBP/AUD', 'sale', 'to_provide', '1550565490742', 1.8199, 0.0, 969, 0, 'License_change', 'pace')
