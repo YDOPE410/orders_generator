@@ -1,14 +1,15 @@
-from datetime import datetime
-from orders_generator.reporter.metric_storage.metric_storage import Metric_storage
+import time
+from reporter.metric_storage.metric_storage import Metric_storage
+from constant.constants_date import ONE_SECOND_IN_MILLISECONDS
 
 
 def benchmark(func):
 
     def wrapper(*args, **kwargs):
         storage = Metric_storage()
-        start = datetime.now()
+        start = time.perf_counter()
         res = func(*args, **kwargs)
-        storage.add_to_storage(func.__name__, (datetime.now() - start).total_seconds() * 1000)
+        storage.add_to_storage(func.__name__, (time.perf_counter() - start) * ONE_SECOND_IN_MILLISECONDS)
         return res
 
     return wrapper

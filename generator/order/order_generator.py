@@ -1,4 +1,4 @@
-from orders_generator.generator.generator import Generator
+from generator.generator import Generator
 
 
 class Order_generator(Generator):

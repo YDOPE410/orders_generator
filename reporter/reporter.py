@@ -1,5 +1,5 @@
 import abc
-from orders_generator.decorator.benchmark import benchmark
+from decorator.benchmark import benchmark
 
 class Report(abc.ABC):
 

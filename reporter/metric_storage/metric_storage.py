@@ -1,4 +1,4 @@
-from orders_generator.decorator.singleton import singleton
+from decorator.singleton import singleton
 
 @singleton
 class Metric_storage:

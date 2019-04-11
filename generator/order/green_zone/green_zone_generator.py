@@ -1,6 +1,6 @@
-from orders_generator.generator.order.zone_generator import Generator_order_in_zone
-from orders_generator.constant import constants_green_zone
-from orders_generator.utils.random_between import random_between
+from generator.order.zone_generator import Generator_order_in_zone
+from constant import constants_green_zone
+from utils.random_between import random_between
 
 class Generator_order_in_green_zone(Generator_order_in_zone):
 

@@ -1,10 +1,10 @@
-from orders_generator.service.file_service.file_service import File_service
+from service.file.file_service import File_service
 import os
 
-class Txt_file_service(File_service):
+class Csv_file_service(File_service):
 
     def __init__(self, txt_file_path, mode):
-        super(Txt_file_service, self).__init__(txt_file_path, mode)
+        super(Csv_file_service, self).__init__(txt_file_path, mode)
 
     def open_connection(self):
         if not self._is_connected:

@@ -1,7 +1,7 @@
 from datetime import datetime
-from orders_generator.constant import constants_logger
-from orders_generator.logger.logger import Logger
-from orders_generator.decorator.singleton import singleton
+from constant import constants_logger
+from logger.logger import Logger
+from decorator.singleton import singleton
 import os
 
 

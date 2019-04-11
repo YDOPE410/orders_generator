@@ -22,14 +22,14 @@
             "VIRTUAL_HOST": "/",
             "PASSWORD": "guest",
             "USER": "guest",
-            "EXCHANGE_NAME": "",
+            "EXCHANGE_NAME": "orders_by_zone",
             "EXCHANGE_TYPE": "topic",
             "ROUTING_KEY_GREEN_ZONE": "green_zone",
             "ROUTING_KEY_BLUE_ZONE": "blue_zone",
             "ROUTING_KEY_RED_ZONE": "red_zone"
   },
-  "TXT_FILE_WITH_ORDERS": "../resource/orders.txt",
-  "LOG_TXT_FILE_PATH": "../logs/current_date.log",
+  "TXT_FILE_WITH_ORDERS": "resource/orders.csv",
+  "LOG_TXT_FILE_PATH": "logs/current_date.log",
   "LOG_LVL": 1,
   "CONSOLE_LOG": true
 }

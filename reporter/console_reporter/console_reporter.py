@@ -1,4 +1,4 @@
-from orders_generator.reporter.reporter import Report
+from reporter.reporter import Report
 
 class Console_reporter(Report):
 

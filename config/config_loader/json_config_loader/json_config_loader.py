@@ -1,7 +1,6 @@
 import json
-from orders_generator.config.config_loader.config_loader import Config_loader
-from orders_generator.config.configuration import Configuration
-from orders_generator.config.mapper.mapper_from_dict import Mapper
+from config.config_loader.config_loader import Config_loader
+from config.mapper.mapper_from_dict import Mapper
 
 class Json_config_loader(Config_loader):
 

@@ -1,9 +1,9 @@
 import abc
 from datetime import datetime
-from orders_generator.generator.order.order import Order
-from orders_generator.utils.linearly_congruential_method import LCM
-from orders_generator.utils.random_between import random_between
-from orders_generator.constant import constants_cur_pair, constants_description, constants_tag, constants_init_px, \
+from generator.order.order import Order
+from utils.linearly_congruential_method import LCM
+from utils.random_between import random_between
+from constant import constants_cur_pair, constants_description, constants_tag, constants_init_px, \
                                       constants_vol, constants_linearly_congruent_method, constants_date, \
                                       constants_direction, constants_timestamp
 

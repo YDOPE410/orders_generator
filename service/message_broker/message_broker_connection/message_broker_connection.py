@@ -1,8 +1,6 @@
 import abc
 
-
-class Connection(abc.ABC):
-    _is_connected = False
+class Message_broker_connection(abc.ABC):
 
     @abc.abstractmethod
     def open_connection(self):
@@ -11,7 +9,3 @@ class Connection(abc.ABC):
     @abc.abstractmethod
     def close_connection(self):
         pass
-
-    def is_connected(self):
-        pass
-
