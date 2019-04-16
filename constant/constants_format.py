@@ -1,5 +1,5 @@
 INSERT_FORMAT = "insert into history(order_id, cur_pair, direction, status, date, init_px, fill_px, init_vol, " \
-                "fill_vol, description, tag) values({0})"
+                "fill_vol, description, tag) values({0},'{1}','{2}','{3}',{4},{5},{6},{7},{8},'{9}','{10}')"
 ORDER_FORMAT = "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}\n"
 #0 - order id
 #1 - order cur_pair
