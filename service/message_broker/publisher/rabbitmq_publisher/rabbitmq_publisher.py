@@ -1,5 +1,5 @@
 from service.message_broker.publisher.publisher import Publisher
-
+import pika
 
 class Rabbitmq_publisher(Publisher):
     def __init__(self, channel, exchange, routing_key):
@@ -12,6 +12,7 @@ class Rabbitmq_publisher(Publisher):
         try:
             self.channel.basic_publish(exchange=self.exchange,
                                        routing_key=self.routing_key,
-                                       body=message)
+                                       body=message,
+                                       properties=pika.BasicProperties(delivery_mode=2))
         except Exception as e:
             self.logger.error(f"Cant publish {message}. {e}")

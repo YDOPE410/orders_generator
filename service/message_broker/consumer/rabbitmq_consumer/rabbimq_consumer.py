@@ -5,16 +5,16 @@ from service.storage.storage import Storage
 
 
 class Rabbitmq_consumer(Consumer):
-    def __init__(self, queue, message_broker):
-        super(__class__, self).__init__(queue, message_broker)
+    def __init__(self, queue, message_broker, storage):
+        super(__class__, self).__init__(queue, message_broker, storage)
 
 
     def start(self):
         try:
-            self.storage = Storage()
             self.logger.debug("Starting consuming")
             self.message_broker.open_connection()
             channel = self.message_broker.connection.channel()
+            channel.basic_qos(prefetch_count=1)
             for message in channel.consume(queue=self.queue, auto_ack=True, inactivity_timeout=1):
                 method, properties, body = message
                 if body == None:

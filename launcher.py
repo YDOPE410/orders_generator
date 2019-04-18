@@ -38,9 +38,9 @@ class Launcher:
         rabbitmq.add_publisher("green_publisher", config.RABBITMQ.EXCHANGE_NAME,
                                config.RABBITMQ.EXCHANGE_TYPE, "green_zone", config.RABBITMQ.ROUTING_KEY_GREEN_ZONE)
 
-        rabbitmq.add_consumer("red_consumer", "red_zone")
-        rabbitmq.add_consumer("blue_consumer", "blue_zone")
-        rabbitmq.add_consumer("green_consumer", "green_zone")
+        rabbitmq.add_consumer("red_consumer", "red_zone", storage)
+        rabbitmq.add_consumer("blue_consumer", "blue_zone", storage)
+        rabbitmq.add_consumer("green_consumer", "green_zone", storage)
 
         return config, mysql, rabbitmq, logger, storage, metrics
 
@@ -125,7 +125,6 @@ class Launcher:
         logger.debug(f"Orders from green zone count: {report_from_sql[1][0]}")
         logger.debug(f"Orders from red zone count: {report_from_sql[2][0]}")
         logger.debug(f"Orders from blue zone count: {report_from_sql[3][0]}")
-        #
 
 
     def start(self):

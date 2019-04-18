@@ -29,5 +29,5 @@ class Message_broker(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def add_consumer(self, consumer_name, queue):
+    def add_consumer(self, consumer_name, queue, storage):
         pass

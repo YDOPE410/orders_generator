@@ -29,7 +29,7 @@ class Mysql_service(Database_service):
         self.logger.debug(f"Trying reconnect to {self.database}")
         for i in range(NUMBERS_TO_RECONNECT):
             try:
-                self._open_connection()
+                self.connection = self._open_connection()
                 return
             except Exception as e:
                     self.logger.error(f"Reconnect failed. {e}")

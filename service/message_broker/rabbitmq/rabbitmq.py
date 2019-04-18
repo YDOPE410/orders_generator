@@ -45,7 +45,7 @@ class Rabbitmq_service(Message_broker):
         self.logger.debug(f"Trying reconnect to message broker")
         for i in range(NUMBERS_TO_RECONNECT):
             try:
-                self._open_connection()
+                self.connection = self._open_connection()
                 return
             except Exception as e:
                 self.logger.error(f"Reconnect failed. {e}")
@@ -104,11 +104,11 @@ class Rabbitmq_service(Message_broker):
             self.logger.error(f"Cant add publisher. {e}")
 
 
-    def add_consumer(self, consumer_name, queue):
+    def add_consumer(self, consumer_name, queue, storage):
         try:
             channel = self.connection.channel()
             self._setup_consumer(channel, queue)
-            consumer = Rabbitmq_consumer(queue, self)
+            consumer = Rabbitmq_consumer(queue, self, storage)
             self.consumers[consumer_name] = consumer
             self.logger.debug(f"Added consumer with name {consumer_name}. Consume queue = {queue}.")
         except Exception as e:

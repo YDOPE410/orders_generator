@@ -1,7 +1,5 @@
 from decorator.singleton import singleton
 
-
-@singleton
 class Storage:
     def __init__(self):
         self._storage = list()
