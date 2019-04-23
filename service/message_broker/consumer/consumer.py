@@ -13,3 +13,7 @@ class Consumer(abc.ABC):
     @abc.abstractmethod
     def start(self):
         pass
+
+    @abc.abstractmethod
+    def run(self):
+        pass

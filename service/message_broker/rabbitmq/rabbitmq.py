@@ -5,6 +5,7 @@ from service.message_broker.message_broker import Message_broker
 from constant.constants_reconnect import *
 from service.message_broker.publisher.rabbitmq_publisher.rabbitmq_publisher import Rabbitmq_publisher
 from service.message_broker.consumer.rabbitmq_consumer.rabbimq_consumer import Rabbitmq_consumer
+import threading
 
 
 class Rabbitmq_service(Message_broker):
@@ -12,13 +13,13 @@ class Rabbitmq_service(Message_broker):
         super(Rabbitmq_service, self).__init__(user, password, host, virtual_host, port)
         self.publishers = dict()
         self.consumers = dict()
-        self.connection = None
+        self.connections = dict()
 
 
     def open_connection(self):
         try:
             self.logger.debug(f"Trying open connection to message broker")
-            self.connection = self._open_connection()
+            self._open_connection()
             self.logger.debug(f"Connected to message broker")
         except pika.exceptions.AMQPError as e:
             self.logger.error(f"Cant connect to message broker")
@@ -28,15 +29,31 @@ class Rabbitmq_service(Message_broker):
 
 
     def _open_connection(self):
-        return pika.BlockingConnection(pika.ConnectionParameters(
+        connection_id = threading.current_thread().name
+        if connection_id in self.connections:
+            if self.connections[connection_id].is_open:
+                self.logger.info(f"Connection already opened in thread {connection_id}")
+                return
+        connection = pika.BlockingConnection(pika.ConnectionParameters(
 				credentials=pika.PlainCredentials(username=self.user, password=self.password),
 				host=self.host,
 				port=self.port,
 				virtual_host=self.virtual_host))
+        self.connections[connection_id] = connection
+
+    def _get_connection(self):
+        connection_id = threading.current_thread().name
+        connection = None
+        try:
+            connection = self.connections[connection_id]
+        except KeyError:
+            self.logger.error(f"No connection for thread {connection_id}")
+        return connection
 
     def close_connection(self):
         try:
-            self.connection.close()
+            connection = self._get_connection()
+            connection.close()
             self.logger.debug("Message broker closed")
         except pika.exceptions.AMQPError as e:
             self.logger.error(f"Cant close message broker. {e}")
@@ -63,7 +80,7 @@ class Rabbitmq_service(Message_broker):
         except Exception as e:
             self.logger.error(f"Cant bind queue. {e}")
 
-    def _queue_declare(self, channel, queue, passive=False, durable=False, exclusive=False, auto_delete=False):
+    def _queue_declare(self, channel, queue, passive=False, durable=True, exclusive=False, auto_delete=False):
         try:
             channel.queue_declare(queue=queue,
                                   passive=passive,
@@ -74,7 +91,7 @@ class Rabbitmq_service(Message_broker):
             self.logger.error(f"Cant declare queue. {e}")
 
     def _exchange_declare(self, channel, exchange=None, exchange_type='direct',
-                          passive=False, durable=False, auto_delete=False):
+                          passive=False, durable=True, auto_delete=False):
         try:
             channel.exchange_declare(exchange=exchange,
                                      exchange_type=exchange_type,
@@ -94,7 +111,7 @@ class Rabbitmq_service(Message_broker):
 
     def add_publisher(self, publisher_name, exchange, exchange_type, queue, routing_key):
         try:
-            channel = self.connection.channel()
+            channel = self._get_connection().channel()
             self._setup_publisher(channel, exchange, exchange_type, queue, routing_key)
             publisher = Rabbitmq_publisher(channel, exchange, routing_key)
             self.publishers[publisher_name] = publisher
@@ -106,7 +123,7 @@ class Rabbitmq_service(Message_broker):
 
     def add_consumer(self, consumer_name, queue, storage):
         try:
-            channel = self.connection.channel()
+            channel = self._get_connection().channel()
             self._setup_consumer(channel, queue)
             consumer = Rabbitmq_consumer(queue, self, storage)
             self.consumers[consumer_name] = consumer

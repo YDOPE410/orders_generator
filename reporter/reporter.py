@@ -5,6 +5,6 @@ class Report(abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def write_report(data):
+    def write_report(*args):
         pass
 

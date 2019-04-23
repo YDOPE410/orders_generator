@@ -1,9 +1,9 @@
 {
-  "COUNT_ORDERS": 50000,
+  "COUNT_ORDERS": 20000,
   "RED_ZONE": 0.15,
   "GREEN_ZONE": 0.6,
   "BLUE_ZONE": 0.25,
-  "BATCH": 1000,
+  "BATCH": 100,
   "ZONE": {
     "BLUE_ZONE": "blue_zone",
     "RED_ZONE": "red_zone",

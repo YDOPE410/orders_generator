@@ -12,7 +12,7 @@ from constant import constants_format
 from reporter.metric_storage.metric_storage import Metric_storage
 from reporter.console_reporter.console_reporter import Console_reporter
 from decorator.benchmark import benchmark
-from constant.constants_sql_queryes import REPORT
+from reporter.background_reporter.background_reporter import Background_reporter
 import time
 
 
@@ -42,6 +42,9 @@ class Launcher:
         rabbitmq.add_consumer("blue_consumer", "blue_zone", storage)
         rabbitmq.add_consumer("green_consumer", "green_zone", storage)
 
+        back_worker = Background_reporter(mysql, storage)
+        back_worker.start()
+
         return config, mysql, rabbitmq, logger, storage, metrics
 
     def _main(self, config, mysql, rabbitmq, logger, storage):
@@ -56,17 +59,16 @@ class Launcher:
         blue_order_generator = Generator_order_in_blue_zone()
 
         main_order_generator = Order_generator(red_order_generator)
-        for gen in self._generate(main_order_generator, amount_red_zone, config):
-            self._publish(gen, "red_publisher", rabbitmq)
+        for gen in self._generate(main_order_generator, amount_red_zone, config, storage):
+            self._publish(gen, "red_publisher", rabbitmq, storage)
 
         main_order_generator.change_zone(green_order_generator)
-        for gen in self._generate(main_order_generator, amount_green_zone, config):
-            self._publish(gen, "green_publisher", rabbitmq)
-
+        for gen in self._generate(main_order_generator, amount_green_zone, config, storage):
+            self._publish(gen, "green_publisher", rabbitmq, storage)
 
         main_order_generator.change_zone(blue_order_generator)
-        for gen in self._generate(main_order_generator, amount_blue_zone, config):
-            self._publish(gen, "blue_publisher", rabbitmq)
+        for gen in self._generate(main_order_generator, amount_blue_zone, config, storage):
+            self._publish(gen, "blue_publisher", rabbitmq, storage)
 
         logger.debug("Start red_consumer")
         rabbitmq.consumers["red_consumer"].start()
@@ -74,44 +76,52 @@ class Launcher:
         rabbitmq.consumers["blue_consumer"].start()
         logger.debug("Start green_consumer")
         rabbitmq.consumers["green_consumer"].start()
+        rabbitmq.consumers["red_consumer"].join()
+        rabbitmq.consumers["blue_consumer"].join()
+        rabbitmq.consumers["green_consumer"].join()
+
         batch_count = int(storage.count()/config.BATCH)
-        bath_amount = storage.count() - batch_count
-
+        bath_modulo = storage.count() - batch_count*config.BATCH
         for i in range(batch_count):
-            self._insert_batch_to_db(mysql, storage.pop(config.BATCH))
+            self._insert_batch_to_db(mysql, storage.get(config.BATCH), storage)
 
-        self._insert_batch_to_db(mysql, storage.pop(bath_amount))
-
+        self._insert_batch_to_db(mysql, storage.get(bath_modulo), storage)
 
 
     @benchmark
-    def _generate(self, generator, amount, config):
+    def _generate(self, generator, amount, config, storage):
         count_of_batch = int(amount / config.BATCH)
         modulo = amount - count_of_batch * config.BATCH
         for i in range(count_of_batch):
             orders = generator.generate_batch(config.BATCH)
             for order in orders:
+                storage.generated += 1
                 yield order
         orders = generator.generate_batch(modulo)
         for order in orders:
+            storage.generated += 1
             yield order
 
     @benchmark
-    def _publish(self, message, publisher_name, rabbitmq):
-        rabbitmq.publishers[publisher_name].publish(Order_serializer.serialize(message))
+    def _publish(self, message, publisher_name, rabbitmq, storage):
+        if rabbitmq.publishers[publisher_name].publish(Order_serializer.serialize(message)):
+           storage.published += 1
 
     @benchmark
-    def _insert_to_db(self, handler, order):
+    def _insert_to_db(self, handler, order, storage):
         order = Order_serializer.deserialize(order)
-        if handler.execute(constants_format.INSERT_FORMAT.format(order.id, order.cur_pair, order.direction,
+        if not handler.execute(constants_format.INSERT_FORMAT.format(order.id, order.cur_pair, order.direction,
                                                            order.status, order.date, order.init_px,order.fill_px,
-                                                           order.init_vol, order.fill_vol, order.description, order.tag)):
+                                                           order.init_vol, order.fill_vol, order.description, order.tag)) == None:
+            storage.delete(1)
             return True
+        handler.commit()
         return False
 
-    def _insert_batch_to_db(self, handler, batch):
+    def _insert_batch_to_db(self, handler, batch, storage):
         for order in batch:
-            self._insert_to_db(handler, order)
+            if self._insert_to_db(handler, order, storage):
+                pass
         handler.commit()
 
     def _free(self, mysql, rabbitmq):
@@ -119,12 +129,7 @@ class Launcher:
         rabbitmq.close_connection()
 
     def _report(self, metrics, mysql, logger):
-        Console_reporter.write_report(metrics.storage)
-        report_from_sql = mysql.execute(REPORT)
-        logger.debug(f"Orders count: {report_from_sql[0][0]}")
-        logger.debug(f"Orders from green zone count: {report_from_sql[1][0]}")
-        logger.debug(f"Orders from red zone count: {report_from_sql[2][0]}")
-        logger.debug(f"Orders from blue zone count: {report_from_sql[3][0]}")
+        Console_reporter.write_report(metrics.storage, mysql)
 
 
     def start(self):
