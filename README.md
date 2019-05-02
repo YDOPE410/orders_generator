@@ -66,3 +66,33 @@ To run the application use the command:
 ```bash
 python3.7 launcher.py
 ```
+
+#Docker start
+## Requirements
+### Docker
+* Docker
+* Docker Compose
+Download it from official site: https://docs.docker.com/install/
+
+## Running
+Run MySQL and RabbitMQ services
+```bash
+$ docker-compose up
+```
+Build docker image
+```bash
+$ docker image --tag=orders_generator .
+```
+Run docker container
+```bash
+$ docker run --network=orders_generator_default orders_generator
+```
+##After finish application
+Stop container and delete services created by docker-compose up
+```bash
+$ docker-compose down
+```
+Delete image if you want free up memory
+```bash
+$ docker image rm --force orders_generator
+```

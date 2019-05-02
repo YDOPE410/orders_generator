@@ -12,16 +12,16 @@
   "MYSQL": {
     "DATABASE": "db_simcord_orders_history",
     "HOST": "localhost",
-    "PORT": 3306,
-    "PASSWORD": "",
+    "PORT": 3307,
+    "PASSWORD": "root",
     "USER": "hoffman"
   },
   "RABBITMQ": {
-            "HOST": "localhost",
-            "PORT": 5672,
+            "HOST": "127.0.0.1",
+            "PORT": 5673,
             "VIRTUAL_HOST": "/",
-            "PASSWORD": "guest",
-            "USER": "guest",
+            "PASSWORD": "admin",
+            "USER": "admin",
             "EXCHANGE_NAME": "orders_by_zone",
             "EXCHANGE_TYPE": "topic",
             "ROUTING_KEY_GREEN_ZONE": "green_zone",

@@ -1,0 +1,26 @@
+version: "3"
+services:
+  mysql:
+    hostname: mysql
+    image: mysql:8.0.15
+    container_name: my-sql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_USER: 'hoffman'
+      MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - ./create_database.sql:/docker-entrypoint-initdb.d/create_database.sql
+    ports:
+      - "3307:3306"
+  rabbitmq:
+    hostname: rabbitmq
+    image: rabbitmq:3.6.1-management
+    container_name: rmq-man
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15673:15672"
+      - "5673:5672"
